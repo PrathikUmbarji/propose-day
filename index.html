@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Will You Be Mine? 💘</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff5f9e, #ff2f6d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px 50px;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      animation: popIn 0.6s ease;
+      position: relative;
+      width: 420px;
+    }
+
+    h1 {
+      color: #ff2f6d;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    /* Question image */
+    .question-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      background: #ffe3ec;
+    }
+
+    .buttons {
+      position: relative;
+      width: 320px;
+      height: 120px;
+      margin: auto;
+    }
+
+    button {
+      position: absolute;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    #yes {
+      background: #ff2f6d;
+      color: white;
+      left: 0;
+      bottom: 0;
+      position: absolute;
+    }
+
+    #no {
+      background: #ffd1e1;
+      color: #ff2f6d;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+    }
+
+    .hearts-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    }
+
+    .heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: 18px;
+    animation: floatUp linear forwards;
+    opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+    from {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.9;
+    }
+    to {
+        transform: translateY(-110vh) translateX(40px) scale(1.4);
+        opacity: 0;
+    }
+    }
+
+
+    /* Falling animation */
+    @keyframes fall {
+      to {
+        transform: translateY(700px) rotate(30deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* YES screen image */
+    .yes-img {
+      width: 320px;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 24px;
+      margin-top: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+
+
+<body>
+    <div class="hearts-container"></div>
+  <div class="card" id="card">
+    <h1>Will you be my Valentine? 💕</h1>
+    <p>I promise snacks, hugs, and endless memes.</p>
+
+    <!-- QUESTION IMAGE PLACEHOLDER -->
+    <img
+      src="question.jpg"
+      alt="Us being cute"
+      class="question-img"
+    />
+
+    <div class="buttons">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No 🙈</button>
+    </div>
+  </div>
+
+  <script>
+
+    function sparkleBurst(x, y) {
+  for (let i = 0; i < 12; i++) {
+    const spark = document.createElement("div");
+    spark.innerText = "✨";
+    spark.style.position = "fixed";
+    spark.style.left = x + "px";
+    spark.style.top = y + "px";
+    spark.style.fontSize = "16px";
+    spark.style.pointerEvents = "none";
+    spark.style.zIndex = 9999;
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 40 + Math.random() * 30;
+
+    spark.animate(
+      [
+        { transform: "translate(0,0)", opacity: 1 },
+        {
+          transform: `translate(${Math.cos(angle) * distance}px,
+                                 ${Math.sin(angle) * distance}px)`,
+          opacity: 0
+        }
+      ],
+      { duration: 700, easing: "ease-out" }
+    );
+
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 700);
+  }
+}
+
+
+    function startFloatingHearts() {
+  const container = document.querySelector(".hearts-container");
+  if (!container) return;
+
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = Math.random() > 0.5 ? "💖" : "💕";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+    heart.style.fontSize = 14 + Math.random() * 18 + "px";
+
+    container.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 9000);
+  }, 400);
+}
+
+
+    function enableNoButtonEscape() {
+  const noBtn = document.getElementById("no");
+  const container = document.querySelector(".buttons");
+
+  if (!noBtn || !container) return;
+
+  noBtn.addEventListener("mouseenter", () => {
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const maxX = containerRect.width - btnRect.width;
+    const maxY = containerRect.height - btnRect.height;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = `${x}px`;
+    noBtn.style.top = `${y}px`;
+    noBtn.style.right = "auto";
+    noBtn.style.bottom = "auto";
+  });
+
+  noBtn.addEventListener("click", () => {
+    noBtn.style.pointerEvents = "none";
+    noBtn.style.animation = "fall 0.9s ease-in forwards";
+  });
+}
+
+
+  const quizData = [
+    {
+      question: "Where did we first meet?",
+      options: ["Online 💻", "College 🎓", "Cafe ☕"],
+      correct: 1,
+      explanation: "College! Where everything started 💕"
+    },
+    {
+      question: "What do I love the most?",
+      options: ["Food 🍕", "You 😳", "Sleep 😴"],
+      correct: 1,
+      explanation: "Correct answer was obvious 😌❤️"
+    },
+    {
+      question: "Will you go on more dates with me?",
+      options: ["Yes 💖", "Obviously 🙄", "100% 😍"],
+      correct: 2,
+      explanation: "That's the energy I need 😭💘"
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  let answered = false;
+
+  document.getElementById("yes").addEventListener("click", showYayScreen);
+
+  function showYayScreen() {
+    document.body.innerHTML = `
+      <div style="
+        text-align:center;
+        animation: popIn 0.6s ease;
+      ">
+        <h1 style="color:white;font-size:48px;">
+          YAYYYY 💘💘💘
+        </h1>
+        <p style="color:white;font-size:22px;">
+          Best decision ever 😭❤️
+        </p>
+        <img src="yes.jpg" class="yes-img" />
+      </div>
+    `;
+
+    document.addEventListener("click", (e) => {
+    sparkleBurst(e.clientX, e.clientY);
+    }, { once: true });
+
+
+    // Start quiz AFTER yay screen
+    setTimeout(() => {
+      loadQuiz();
+    }, 1800);
+  }
+
+  function loadQuiz() {
+    const q = quizData[currentQuestion];
+    answered = false;
+
+    document.body.innerHTML = `
+      <div class="quiz" style="
+        background:white;
+        padding:40px;
+        border-radius:24px;
+        width:420px;
+        text-align:center;
+        animation: popIn 0.5s ease;
+        margin:auto;
+        ">
+        <h2 style="color:#ff2f6d;">
+          Question ${currentQuestion + 1} / ${quizData.length}
+        </h2>
+
+        <p style="font-size:20px;margin:15px 0;">
+          ${q.question}
+        </p>
+
+        <div id="options"></div>
+
+        <p id="feedback" style="margin-top:20px;font-weight:600;"></p>
+
+        <p style="margin-top:10px;color:#555;">
+          Score: <b>${score}</b>
+        </p>
+
+        <button
+          id="nextBtn"
+          style="
+            display:none;
+            margin-top:20px;
+            padding:12px 28px;
+            border:none;
+            border-radius:999px;
+            background:#ff2f6d;
+            color:white;
+            cursor:pointer;
+          "
+        >
+          Next →
+        </button>
+      </div>
+    `;
+
+    const optionsDiv = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+
+    q.options.forEach((opt, idx) => {
+        sparkleBurst(
+  window.innerWidth / 2,
+  window.innerHeight / 2
+);
+
+      const btn = document.createElement("button");
+      btn.innerText = opt;
+
+    btn.style.cssText = `
+    position: relative;   /* ← FIX */
+    width:100%;
+    max-width:340px;
+    margin:10px auto;
+    padding:12px;
+    border-radius:999px;
+    border:2px solid #ff2f6d;
+    background:white;
+    color:#ff2f6d;
+    cursor:pointer;
+    display:block;
+`   ;
+
+      btn.onclick = () => {
+        if (answered) return;
+        answered = true;
+
+        if (idx === q.correct) {
+          btn.style.background = "#ff2f6d";
+          btn.style.color = "white";
+          feedback.innerText = "✅ " + q.explanation;
+          feedback.style.color = "#ff2f6d";
+          score++;
+        } else {
+          btn.style.background = "#ffd1e1";
+          feedback.innerText = "❌ " + q.explanation;
+          feedback.style.color = "#c0392b";
+        }
+
+        nextBtn.style.display = "inline-block";
+      };
+
+      optionsDiv.appendChild(btn);
+    });
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuiz();
+      } else {
+        showFinalScreen();
+      }
+    };
+  }
+
+  function showFinalScreen() {
+    document.body.innerHTML = `
+      <div style="text-align:center;animation: popIn 0.6s ease;">
+        <h1 style="color:white;font-size:48px;">
+          Quiz Complete 🎉
+        </h1>
+        <p style="color:white;font-size:24px;">
+          Final Score: ${score} / ${quizData.length}
+        </p>
+        <p style="color:white;font-size:20px;">
+          ${score === quizData.length
+            ? "Perfect score 😍❤️"
+            : "Still cute though 😌💖"}
+        </p>
+      </div>
+    `;
+  }
+
+  window.onload = () => {
+  enableNoButtonEscape();
+  startFloatingHearts();
+};
+
+
+</script>
+
+
+</body>
+</html>
